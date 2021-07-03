@@ -2,37 +2,42 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <math.h>
 #define lli long long int
 using namespace std;
-
+lli closest_subset(lli *arr, lli n){
+    lli snum = 0;
+    lli total=0;
+    for (int i=0;i<n;++i)
+    {
+      total+=arr[i];
+    }
+    lli closest=0;
+    while(snum<pow(2,n)){
+      lli sum=0;
+        for(int i=0;i<n;++i)
+        {
+            if((snum&(1<<i))!=0)
+                sum+=arr[i];
+        }
+        if (sum<=total/2)
+          closest=max(closest,sum);
+        ++snum;
+    }
+    return closest;
+}
 int main()
 {
-  int n;
+  ios::sync_with_stdio(0);
+  cin.tie(0);
 
+  lli n,sum=0;
   cin>>n;
-  vector<int> v;
-  lli sum=0;
+  lli a[n];
+
   for (int i=0;i<n;i++)
-  {
-    int a;
-    cin>>a;
-    sum+=a;
-    v.push_back(a);
-  }
-  lli half=sum/2;
-  lli temp=0;
-  lli closest=sum;
-  sort(v.begin(),v.end(),greater<int>());
-  while (half>0)
-  {
-    for (int i:v)
-    {
-      if (temp+i<=half)
-        temp+=i;
-    }
-    if (closest>temp) closest=temp;
-    half-=1;
-  }
-  cout<<sum-closest*2;
-  return 0;
+    cin>>a[i], sum+=a[i];
+
+  lli result=sum-2*closest_subset(a,n);
+  cout<<result;
 }
